@@ -12,3 +12,7 @@ class HelloscrapyItem(scrapy.Item):
     # define the fields for your item here like:
     text = scrapy.Field()
     # pass
+
+class JDCategoryItem(scrapy.Item):
+    name = scrapy.Field()
+    parentName = scrapy.Field()

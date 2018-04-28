@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import os
-from ..items import HelloscrapyItem
+from ..items import JDCategoryItem
 from scrapy_splash import SplashRequest
 
 lua_script = ''
@@ -19,26 +19,37 @@ class ExampleSpider(scrapy.Spider):
     def start_requests(self):
         for url in self.start_urls:
             yield SplashRequest(url=url,
-                                callback=self.parse,
+                                callback=self.jdCategoryParse,
                                 args={
                                     'lua_source': lua_script,
-                                    'menuIndex': 1
+                                    'menuIndex': 33
                                 },
                                 endpoint='execute')
             # endpoint='render.html')
 
-    def parse(self, response):
+    def jdCategoryParse(self, response):
         if hasattr(response, 'data'):
             carry_data = response.data['carryData']
             currentIndex = carry_data['currentIndex']
             menuLength = carry_data['menuLength']
+            parentName = carry_data['parentName']
             if currentIndex + 1 >= menuLength:
                 print('爬虫结束')
-                yield
-            print('menu长度是 ', currentIndex)
-            print(response.xpath('//div[contains(@class, "jd-category-div")]/h4/text()').extract())
-            yield SplashRequest(url=self.crawlUrl,
-                                callback=self.parse,
+                return
+            print('menu当前索引是 ', currentIndex)
+            secondCategoryList = response.xpath('//div[contains(@class, "jd-category-div")]')
+            for secondCategory in secondCategoryList:
+                secondCategoryTitle = secondCategory.xpath('h4/text()').extract()
+                trirdCategoryList = secondCategory.xpath('ul/li//span/text()').extract()
+
+            # secondCategoryTitleList = secondCategoryList.extract()
+            # for category in secondCategoryTitleList:
+            #     item = JDCategoryItem()
+            #     item['name'] = category
+            #     item['parentName'] = parentName
+            #     yield item
+            yield SplashRequest(url=response.url,
+                                callback=self.jdCategoryParse,
                                 args={
                                     'lua_source': lua_script,
                                     'menuIndex': currentIndex + 1
@@ -46,10 +57,3 @@ class ExampleSpider(scrapy.Spider):
                                 endpoint='execute')
         else:
             print('没有找到carryData')
-            # item = HelloscrapyItem()
-            # for text in response.xpath('//div[@class="quote"]/span[1]/text()').extract():
-            #     item['text'] = text
-            #     yield item
-
-    def jdParse(self, response):
-        print('test')
