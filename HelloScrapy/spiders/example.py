@@ -24,7 +24,7 @@ class ExampleSpider(scrapy.Spider):
                                 callback=self.jdCategoryParse,
                                 args={
                                     'lua_source': lua_script,
-                                    'menuIndex': 1
+                                    'menuIndex': 35
                                 },
                                 endpoint='execute')
             # endpoint='render.html')

@@ -7,6 +7,7 @@
 import json
 import codecs
 from .items import JDFirstCategoryItem, JDSecondCategoryItem, JDThirdCategoryItem
+from util.category_manager import CategoryManager
 
 
 class HelloscrapyPipeline(object):
@@ -23,16 +24,14 @@ class HelloscrapyPipeline(object):
     # 对象转换成dict
     def obj2dict(self, obj):
         if isinstance(obj, JDFirstCategoryItem) or isinstance(obj, JDSecondCategoryItem):
-            return dict({obj['name']: obj['categoryList']})
+            return dict({'name': obj['name'], 'categoryList': obj['categoryList']})
         return dict(obj)
 
     def close_spider(self, spider):
-        try:
-            self.file.write(json.dumps(self.categoryList,
-                                       default=self.obj2dict,
-                                       indent=1,
-                                       sort_keys=False,
-                                       ensure_ascii=False))
-            self.file.close()
-        except Exception:
-            print(Exception)
+        item = CategoryManager.default_manager(CategoryManager).insert_item(self.categoryList)
+        # self.file.write(json.dumps(self.categoryList,
+        #                            default=self.obj2dict,
+        #                            indent=1,
+        #                            sort_keys=False,
+        #                            ensure_ascii=False))
+        # self.file.close()
