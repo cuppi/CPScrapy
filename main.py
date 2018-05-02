@@ -5,3 +5,4 @@ from util.dbmanager import DBManager
 # item = DBManager.default_manager().find_item()
 # print(item);
 cmdline.execute("scrapy crawl example".split())
+
