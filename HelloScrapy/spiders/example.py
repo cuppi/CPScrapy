@@ -24,7 +24,7 @@ class ExampleSpider(scrapy.Spider):
                                 callback=self.jdCategoryParse,
                                 args={
                                     'lua_source': lua_script,
-                                    'menuIndex': 33
+                                    'menuIndex': 1
                                 },
                                 endpoint='execute')
             # endpoint='render.html')
@@ -39,24 +39,18 @@ class ExampleSpider(scrapy.Spider):
                 print('爬虫结束')
                 return
             print('menu当前索引是 ', current_index)
-            first_item = JDFirstCategoryItem(secondCategoryList=[])
+            first_item = JDFirstCategoryItem(categoryList=[])
             first_item['name'] = menu_name
             second_category_list: list = response.xpath('//div[contains(@class, "jd-category-div")]')
             for secondCategory in second_category_list:
-                second_item = JDSecondCategoryItem(thirdCategoryList=[])
-                second_item['name'] = secondCategory.xpath('h4/text()').extract()
+                second_item = JDSecondCategoryItem(categoryList=[])
+                second_item['name'] = secondCategory.xpath('h4/text()').extract_first()
                 for trirdCategory in secondCategory.xpath('ul/li//span/text()').extract()[:]:
                     trird_item = JDThirdCategoryItem()
                     trird_item['name'] = trirdCategory
-                    second_item['thirdCategoryList'].append(trird_item)
-                first_item['secondCategoryList'].append(second_item)
+                    second_item['categoryList'].append(trird_item)
+                first_item['categoryList'].append(second_item)
             yield first_item
-            # secondCategoryTitleList = secondCategoryList.extract()
-            # for category in secondCategoryTitleList:
-            #     item = JDCategoryItem()
-            #     item['name'] = category
-            #     item['menuName'] = menuName
-            #     yield item
             yield SplashRequest(url=response.url,
                                 callback=self.jdCategoryParse,
                                 args={

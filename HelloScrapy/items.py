@@ -10,12 +10,12 @@ import scrapy
 
 class JDFirstCategoryItem(scrapy.Item):
     name: str = scrapy.Field()
-    secondCategoryList: list = scrapy.Field()
+    categoryList: list = scrapy.Field()
 
 
 class JDSecondCategoryItem(scrapy.Item):
     name: str = scrapy.Field()
-    thirdCategoryList: list = scrapy.Field()
+    categoryList: list = scrapy.Field()
 
 
 class JDThirdCategoryItem(scrapy.Item):

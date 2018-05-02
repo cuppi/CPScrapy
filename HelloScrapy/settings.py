@@ -91,7 +91,7 @@ ITEM_PIPELINES = {
 
 # 下面是scrapy-spash使用的配置参数
 # 渲染服务的url
-SPLASH_URL = 'http://192.168.6.129:8050'
+SPLASH_URL = 'http://192.168.6.144:8050'
 # 下载器中间件
 DOWNLOADER_MIDDLEWARES = {
     'scrapy_splash.SplashCookiesMiddleware': 723,
