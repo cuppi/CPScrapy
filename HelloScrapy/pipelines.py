@@ -14,21 +14,24 @@ class HelloscrapyPipeline(object):
         # self.file = open('data.json', 'wb')
         self.categoryList = []
         self.file = codecs.open(
-            'jd_category_utf81.json', 'w', encoding='utf-8')
+            'jd_category_utf8.json', 'w', encoding='utf-8')
 
     def process_item(self, item, spider):
         self.categoryList.append(item)
         return item
 
     def close_spider(self, spider):
-        categoryDict = {}
-        for category in self.categoryList:
-            parentName = category['parentName']
-            if parentName in categoryDict:
-                categoryDict[parentName].append(dict({'name': category['name']}))
-            else:
-                categoryDict[parentName] = [dict({'name': category['name']})]
-        self.file.write(json.dumps(categoryDict,
+        first_dict = {}
+        for first_category in self.categoryList:
+            second_category_list = []
+            for second_category in first_category['secondCategoryList']:
+                third_category_list = []
+                for third_category in second_category['thirdCategoryList']:
+                    third_category_list.append({'name': third_category['name']})
+                second_category_list.append({second_category['name']: third_category_list})
+            first_dict[first_category['name']] = second_category_list
+        print(self.categoryList)
+        self.file.write(json.dumps(first_dict,
                                    indent=1,
                                    sort_keys=False,
                                    ensure_ascii=False))

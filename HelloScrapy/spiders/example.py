@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import os
-from ..items import JDCategoryItem
+from ..items import JDFirstCategoryItem
+from ..items import JDSecondCategoryItem
+from ..items import JDThirdCategoryItem
 from scrapy_splash import SplashRequest
 
 lua_script = ''
@@ -30,29 +32,36 @@ class ExampleSpider(scrapy.Spider):
     def jdCategoryParse(self, response):
         if hasattr(response, 'data'):
             carry_data = response.data['carryData']
-            currentIndex = carry_data['currentIndex']
-            menuLength = carry_data['menuLength']
-            parentName = carry_data['parentName']
-            if currentIndex + 1 >= menuLength:
+            current_index = carry_data['currentIndex']
+            menu_length = carry_data['menuLength']
+            menu_name = carry_data['menuName']
+            if current_index + 1 >= menu_length:
                 print('爬虫结束')
                 return
-            print('menu当前索引是 ', currentIndex)
-            secondCategoryList = response.xpath('//div[contains(@class, "jd-category-div")]')
-            for secondCategory in secondCategoryList:
-                secondCategoryTitle = secondCategory.xpath('h4/text()').extract()
-                trirdCategoryList = secondCategory.xpath('ul/li//span/text()').extract()
-
+            print('menu当前索引是 ', current_index)
+            first_item = JDFirstCategoryItem(secondCategoryList=[])
+            first_item['name'] = menu_name
+            second_category_list: list = response.xpath('//div[contains(@class, "jd-category-div")]')
+            for secondCategory in second_category_list:
+                second_item = JDSecondCategoryItem(thirdCategoryList=[])
+                second_item['name'] = secondCategory.xpath('h4/text()').extract()
+                for trirdCategory in secondCategory.xpath('ul/li//span/text()').extract()[:]:
+                    trird_item = JDThirdCategoryItem()
+                    trird_item['name'] = trirdCategory
+                    second_item['thirdCategoryList'].append(trird_item)
+                first_item['secondCategoryList'].append(second_item)
+            yield first_item
             # secondCategoryTitleList = secondCategoryList.extract()
             # for category in secondCategoryTitleList:
             #     item = JDCategoryItem()
             #     item['name'] = category
-            #     item['parentName'] = parentName
+            #     item['menuName'] = menuName
             #     yield item
             yield SplashRequest(url=response.url,
                                 callback=self.jdCategoryParse,
                                 args={
                                     'lua_source': lua_script,
-                                    'menuIndex': currentIndex + 1
+                                    'menuIndex': current_index + 1
                                 },
                                 endpoint='execute')
         else:

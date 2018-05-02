@@ -8,11 +8,15 @@
 import scrapy
 
 
-class HelloscrapyItem(scrapy.Item):
-    # define the fields for your item here like:
-    text = scrapy.Field()
-    # pass
+class JDFirstCategoryItem(scrapy.Item):
+    name: str = scrapy.Field()
+    secondCategoryList: list = scrapy.Field()
 
-class JDCategoryItem(scrapy.Item):
-    name = scrapy.Field()
-    parentName = scrapy.Field()
+
+class JDSecondCategoryItem(scrapy.Item):
+    name: str = scrapy.Field()
+    thirdCategoryList: list = scrapy.Field()
+
+
+class JDThirdCategoryItem(scrapy.Item):
+    name: str = scrapy.Field()
