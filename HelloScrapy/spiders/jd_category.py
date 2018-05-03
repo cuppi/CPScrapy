@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import os
 from ..items import JDFirstCategoryItem
 from ..items import JDSecondCategoryItem
 from ..items import JDThirdCategoryItem
 from scrapy_splash import SplashRequest
+from util.lua_loader import LuaLoader
 
-lua_script = ''
-with open(os.path.join(os.getcwd(), 'HelloScrapy', 'spider.lua'), 'r') as f:
-    lua_script += f.read()
+lua_script = LuaLoader.load_script('spider.lua')
 
 
-class ExampleSpider(scrapy.Spider):
-    name = 'example'
+class JDCategorySpider(scrapy.Spider):
+    name = 'jd_category'
     crawlUrl = 'https://so.m.jd.com/webportal/channel/m_category?searchFrom=home'
     start_urls = [
         crawlUrl,
@@ -24,7 +22,7 @@ class ExampleSpider(scrapy.Spider):
                                 callback=self.jdCategoryParse,
                                 args={
                                     'lua_source': lua_script,
-                                    'menuIndex': 35
+                                    'menuIndex': 33
                                 },
                                 endpoint='execute')
             # endpoint='render.html')

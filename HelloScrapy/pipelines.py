@@ -32,7 +32,6 @@ class HelloscrapyPipeline(object):
 
     def close_spider(self, spider):
         category_collection: Collection = self.db[collection_name]
-        print(self.categoryList)
         category_collection.insert_many(self.categoryList)
         self.client.close()
 
