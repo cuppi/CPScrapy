@@ -8,17 +8,18 @@ import codecs
 from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.collection import Collection
+from .spiders.jd_category import JDCategorySpider
+from .spiders.sn_category import SNCategorySpider
 
 mongo_uri = 'mongodb://localhost:27017/'
-mongo_db = 'jd_scrapy_data'
-collection_name = 'category_collection'
+mongo_db = 'scrapy_data'
 
 
 class HelloscrapyPipeline(object):
     def __init__(self):
         self.client: MongoClient = None
         self.db: Database = None
-        self.categoryList = []
+        self.category_list = []
         self.file = codecs.open(
             'jd_category_utf8.json', 'w', encoding='utf-8')
 
@@ -27,23 +28,28 @@ class HelloscrapyPipeline(object):
         self.db = self.client[mongo_db]
 
     def process_item(self, item, spider):
-        self.categoryList.append(dict(item))
+        if isinstance(spider, JDCategorySpider):
+            self.category_list.append(dict(item))
+        if isinstance(spider, SNCategorySpider):
+            category_collection: Collection = self.db['sn_category_collection']
+            category_collection.insert_one(dict(item))
         return item
 
     def close_spider(self, spider):
-        category_collection: Collection = self.db[collection_name]
-        category_collection.insert_many(self.categoryList)
+        if isinstance(spider, JDCategorySpider):
+            category_collection: Collection = self.db['jd_category_collection']
+            category_collection.insert_many(self.category_list)
         self.client.close()
 
         # 对象转换成dict
         # def obj2dict(self, obj):
         #     if isinstance(obj, JDFirstCategoryItem) or isinstance(obj, JDSecondCategoryItem):
-        #         return dict({'name': obj['name'], 'categoryList': obj['categoryList']})
+        #         return dict({'name': obj['name'], 'category_list': obj['category_list']})
         #     return dict(obj)
 
         # 文件json存储
-        # item = CategoryManager.default_manager(CategoryManager).insert_categories(self.categoryList)
-        # self.file.write(json.dumps(self.categoryList,
+        # item = CategoryManager.default_manager(CategoryManager).insert_categories(self.category_list)
+        # self.file.write(json.dumps(self.category_list,
         #                            default=self.obj2dict,
         #                            indent=1,
         #                            sort_keys=False,

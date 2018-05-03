@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import os
 from scrapy_splash import SplashRequest
 
 
 class SNGoodsSpider(scrapy.Spider):
-    name = 'example'
+    name = 'sn_goods'
     crawlUrl = 'https://so.m.jd.com/webportal/channel/m_category?searchFrom=home'
     start_urls = [
         crawlUrl,
