@@ -6,52 +6,53 @@ class SNGoodsItem(Item):
     # 0
     inventory: str = Field()
     # CPU升级至1.8GHz 性能更强劲 能力胜任大小事 电力满足一天所需
-    auxdescription: str = Field()
+    aux_description: str = Field()
     # 苹果/Apple MacBook Air 13.3英寸笔记本电脑(I5 8G 128GB MQD32CH/A 银色)
-    catentdesc: str = Field()
+    catent_desc: str = Field()
     # 627848265
-    catentryId: str = Field()
+    catentry_id: str = Field()
     # 46152
-    countOfarticle: str = Field()
+    count_of_article: str = Field()
     # 627848265
-    partnumber:str = Field()
+    part_number:str = Field()
     # 6488.0
     price: str = Field()
     # 0
-    saleStatus: int = Field()
+    sale_status: int = Field()
     #
-    contractInfos: str = Field()
+    contract_infos: str = Field()
     # true
-    snFlag: bool = Field()
+    sn_flag: bool = Field()
     # false
-    suningSale: bool = Field()
+    suning_sale: bool = Field()
     # 100%
-    praiseRate: str = Field()
+    praise_rate: str = Field()
     # 0000000000
-    salesCode: str = Field()
+    sales_code: str = Field()
     # 苏宁自营
-    salesName: str = Field()
+    sales_name: str = Field()
     # 0000000000
-    salesCode10: str = Field()
+    sales_code10: str = Field()
     # 0
-    beancurdFlag: str = Field()
+    beancurd_flag: str = Field()
     # 1
-    goodsType: str = Field()
+    goods_type: str = Field()
     # 2
-    priceType: str = Field()
+    price_type: str = Field()
     # [{}, {}]
     filters: list = Field()
     # true
-    filterAttr: bool = Field()
+    filter_attr: bool = Field()
     # true
-    isFav: bool = Field()
+    is_fav: bool = Field()
     # false
-    hwgLable: bool = Field()
+    hwg_lable: bool = Field()
     # 0
-    baoguangHwg: str = Field()
+    baoguang_hwg: str = Field()
     # //imgservice3.suning.cn/uimg1/b2c/image/7uLUHa9pIHoXTY004jW97Q==.jpg
-    dynamicImg: str = Field()
-    extenalFileds: dict = Field()
+    dynamic_img: str = Field()
+    extenal_fileds: dict = Field()
+    last_updated = Field()
     '''
     "extenalFileds": {
         "title": "苹果/Apple MacBook Air 13.3英寸笔记本电脑(I5 8G 128GB MQD32CH/A 银色)",
@@ -76,3 +77,36 @@ class SNGoodsItem(Item):
         "commentShow": "4.6万+"
     }
     '''
+
+    def __init__(self, args):
+        print(args)
+        args['inventory'] = args.pop('inventory', '')
+        args['aux_description'] = args.pop('auxdescription', '')
+        args['catent_desc'] = args.pop('catentdesc', '')
+        args['catentry_id'] = args.pop('catentryId', '')
+        args['count_of_article'] = args.pop('countOfarticle', '')
+        args['part_number'] = args.pop('partnumber', '')
+        args['price'] = args.pop('price', '')
+        args['sale_status'] = args.pop('saleStatus', 0)
+        args['contract_infos'] = args.pop('contractInfos', '')
+        args['sn_flag'] = args.pop('snFlag', False)
+        args['suning_sale'] = args.pop('suningSale', False)
+        args['praise_rate'] = args.pop('praiseRate', '')
+        args['sales_code'] = args.pop('salesCode', '')
+        args['sales_name'] = args.pop('salesName', '')
+        args['sales_code10'] = args.pop('salesCode10', '')
+        args['beancurd_flag'] = args.pop('beancurdFlag', '')
+        args['goods_type'] = args.pop('goodsType', '')
+        args['price_type'] = args.pop('priceType', '')
+        args['filters'] = args.pop('filters', [])
+        args['filter_attr'] = args.pop('filterAttr', False)
+        args['is_fav'] = args.pop('isFav', False)
+        args['hwg_lable'] = args.pop('hwgLable', False)
+        args['baoguang_hwg'] = args.pop('baoguangHwg', '')
+        args['dynamic_img'] = args.pop('dynamicImg', '')
+        args['extenal_fileds'] = args.pop('extenalFileds', {})
+        
+        super(SNGoodsItem, self).__init__(args)
+
+    def serialize_field(self, field, name, value):
+        return super(SNGoodsItem, self).serialize_field(field, name, value)
