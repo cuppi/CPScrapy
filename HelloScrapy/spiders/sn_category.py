@@ -7,6 +7,11 @@ lua_script = LuaLoader.load_script('sn_category.lua')
 
 
 class SNCategorySpider(scrapy.Spider):
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'HelloScrapy.piplines.sn_category_piplines.SNCategoryPipeline': 300,
+        }
+    }
     name = 'sn_category'
     crawlUrl = 'https://m.suning.com/list/list.html'
     start_urls = [

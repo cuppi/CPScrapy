@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'HelloScrapy.s_pipelines.HelloscrapyPipeline': 300,
+   'HelloScrapy.piplines.default_piplines.DefaultPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -102,3 +102,6 @@ DOWNLOADER_MIDDLEWARES = {
 DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 # 使用Splash的Http缓存
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+
+MONGO_URI = 'mongodb://localhost:27017/'
+MONGO_DATABASE = 'scrapy_data'

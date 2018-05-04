@@ -14,7 +14,7 @@ mongo_db = 'scrapy_data'
 
 class SNGoodsPipeline(object):
     def __init__(self):
-        self.client: MongoClient = None
+        self.client = None
         self.db: Database = None
         self.category_list = []
 

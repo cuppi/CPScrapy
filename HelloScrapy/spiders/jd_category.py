@@ -10,6 +10,11 @@ lua_script = LuaLoader.load_script('jd_category.lua')
 
 
 class JDCategorySpider(scrapy.Spider):
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'HelloScrapy.piplines.jd_category_piplines.JDCategoryPipeline': 300,
+        }
+    }
     name = 'jd_category'
     crawlUrl = 'https://so.m.jd.com/webportal/channel/m_category?searchFrom=home'
     start_urls = [
